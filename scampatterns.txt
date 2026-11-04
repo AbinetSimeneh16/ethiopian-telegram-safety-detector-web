@@ -1,0 +1,5 @@
+send,money
+pay,now
+click,link
+bank,transfer
+account,blocked
