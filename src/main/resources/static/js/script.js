@@ -2,13 +2,15 @@
 // 1. Get the HTML elements we need
 const messageInput = document.getElementById("messageInput");
 const analyzeButton = document.getElementById("analyzeButton");
+const clearButton = document.getElementById("clearButton");
 const resultContainer = document.getElementById("resultContainer");
 const historyContainer = document.getElementById("historyContainer");
 
 
+
 // 2. Listen for clicks on the Analyze button
 analyzeButton.addEventListener("click", analyzeMessage);
-
+clearButton.addEventListener("click", clearForm);
 
 // 3. Analyze a message using the Spring Boot API
 async function analyzeMessage() {
@@ -60,6 +62,11 @@ async function analyzeMessage() {
         analyzeButton.disabled = false;
         analyzeButton.textContent = "Analyze Message";
     }
+}
+// Clear the message input and current result
+function clearForm() {
+    messageInput.value = "";
+    resultContainer.replaceChildren();
 }
 
 
