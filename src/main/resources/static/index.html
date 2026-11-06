@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Telegram Safety Detector</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>Telegram Safety Detector</h1>
+    <p>Analyze messages and identify potentially harmful content.</p>
+</header>
+
+<main>
+
+    <div class="dashboard-layout">
+
+        <section class="analyzer">
+            <h2>Analyze a Message</h2>
+
+            <textarea
+                    id="messageInput"
+                    placeholder="Paste your Telegram message here..."
+                    rows="6"
+            ></textarea>
+
+            <button id="analyzeButton">Analyze Message</button>
+
+            <div id="resultContainer"></div>
+        </section>
+
+        <section class="history">
+            <h2>Analysis History</h2>
+
+            <div id="historyContainer">
+                <p>Loading analysis history...</p>
+            </div>
+        </section>
+
+    </div>
+
+</main>
+
+<footer>
+    <p>Telegram Safety Detector | Protecting users from online threats.</p>
+</footer>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>

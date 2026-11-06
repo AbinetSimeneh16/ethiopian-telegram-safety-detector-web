@@ -1,0 +1,155 @@
+
+// 1. Get the HTML elements we need
+const messageInput = document.getElementById("messageInput");
+const analyzeButton = document.getElementById("analyzeButton");
+const resultContainer = document.getElementById("resultContainer");
+const historyContainer = document.getElementById("historyContainer");
+
+
+// 2. Listen for clicks on the Analyze button
+analyzeButton.addEventListener("click", analyzeMessage);
+
+
+// 3. Analyze a message using the Spring Boot API
+async function analyzeMessage() {
+
+    const message = messageInput.value.trim();
+
+    // Check whether the user entered a message
+    if (!message) {
+        resultContainer.textContent = "Please enter a message first.";
+        return;
+    }
+
+    analyzeButton.disabled = true;
+    analyzeButton.textContent = "Analyzing...";
+
+    try {
+
+        // Send the message to the backend
+        const response = await fetch("/api/messages/analyze", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: message
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error("Message analysis failed.");
+        }
+
+        // Convert the JSON response into a JavaScript object
+        const result = await response.json();
+
+        // Display the analysis result
+        displayResult(result);
+
+        // Refresh the analysis history
+        await loadHistory();
+
+    } catch (error) {
+
+        resultContainer.textContent =
+            "Something went wrong: " + error.message;
+
+    } finally {
+
+        analyzeButton.disabled = false;
+        analyzeButton.textContent = "Analyze Message";
+    }
+}
+
+
+// 4. Display the analysis result
+function displayResult(result) {
+
+    resultContainer.replaceChildren();
+
+    const card = document.createElement("div");
+    card.className = "result-card " + result.riskLevel.toLowerCase();
+
+    const heading = document.createElement("h3");
+    heading.textContent = "Analysis Result";
+
+    const category = document.createElement("p");
+    category.textContent =
+        "Category: " + result.detectionCategory;
+
+    const risk = document.createElement("span");
+    risk.className = "risk-badge " + result.riskLevel.toLowerCase();
+    risk.textContent = result.riskLevel;
+
+    const keyword = document.createElement("p");
+    keyword.textContent =
+        "Matched Keyword: " + (result.matchedKeyword || "None");
+
+    const reason = document.createElement("p");
+    reason.textContent =
+        "Reason: " + (result.reason || "No additional explanation.");
+
+    card.append(heading, category, risk, keyword, reason);
+    resultContainer.appendChild(card);
+}
+
+
+// 5. Retrieve previously analyzed messages
+async function loadHistory() {
+
+    try {
+
+        const response = await fetch("/api/messages");
+
+        if (!response.ok) {
+            throw new Error("Could not retrieve analysis history.");
+        }
+
+        const messages = await response.json();
+
+        historyContainer.replaceChildren();
+
+        if (messages.length === 0) {
+            historyContainer.textContent =
+                "No messages have been analyzed yet.";
+            return;
+        }
+
+        // Display each saved analysis
+        messages.forEach(message => {
+
+            const card = document.createElement("div");
+            card.className = "history-card " + message.riskLevel.toLowerCase();
+
+            const text = document.createElement("p");
+            text.textContent =
+                "Message: " + message.messageText;
+
+            const category = document.createElement("p");
+            category.textContent =
+                "Category: " + message.detectionCategory;
+
+            const risk = document.createElement("span");
+            risk.className = "risk-badge " + message.riskLevel.toLowerCase();
+            risk.textContent = message.riskLevel;
+
+            const date = document.createElement("p");
+            date.textContent =
+                "Analyzed At: " + message.analyzedAt;
+
+            card.append(text, category, risk, date);
+
+            historyContainer.appendChild(card);
+        });
+
+    } catch (error) {
+
+        historyContainer.textContent =
+            "Error loading history: " + error.message;
+    }
+}
+
+
+// 6. Load history when the webpage opens
+loadHistory();
