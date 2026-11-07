@@ -103,10 +103,10 @@ function displayResult(result) {
 
 
 // 5. Retrieve previously analyzed messages
+
+// 5. Retrieve previously analyzed messages and group them by date
 async function loadHistory() {
-
     try {
-
         const response = await fetch("/api/messages");
 
         if (!response.ok) {
@@ -114,7 +114,6 @@ async function loadHistory() {
         }
 
         const messages = await response.json();
-
         historyContainer.replaceChildren();
 
         if (messages.length === 0) {
@@ -123,39 +122,98 @@ async function loadHistory() {
             return;
         }
 
-        // Display each saved analysis
+        // Get today's and yesterday's dates
+        const today = new Date();
+
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        // Convert a date into YYYY-MM-DD format
+        function getDateKey(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+
+            return `${year}-${month}-${day}`;
+        }
+
+        const todayKey = getDateKey(today);
+        const yesterdayKey = getDateKey(yesterday);
+
+        // Create groups for the three date categories
+        const groups = {
+            Today: [],
+            Yesterday: [],
+            Earlier: []
+        };
+
+        // Sort messages from newest to oldest
+        messages.sort((a, b) =>
+            new Date(b.analyzedAt) - new Date(a.analyzedAt)
+        );
+
+        // Place each message into the correct date group
         messages.forEach(message => {
+            const messageDate = message.analyzedAt.substring(0, 10);
 
-            const card = document.createElement("div");
-            card.className = "history-card " + message.riskLevel.toLowerCase();
+            if (messageDate === todayKey) {
+                groups.Today.push(message);
+            } else if (messageDate === yesterdayKey) {
+                groups.Yesterday.push(message);
+            } else {
+                groups.Earlier.push(message);
+            }
+        });
 
-            const text = document.createElement("p");
-            text.textContent =
-                "Message: " + message.messageText;
+        // Display each group
+        Object.entries(groups).forEach(([groupName, groupMessages]) => {
 
-            const category = document.createElement("p");
-            category.textContent =
-                "Category: " + message.detectionCategory;
+            if (groupMessages.length === 0) {
+                return;
+            }
 
-            const risk = document.createElement("span");
-            risk.className = "risk-badge " + message.riskLevel.toLowerCase();
-            risk.textContent = message.riskLevel;
+            const section = document.createElement("div");
 
-            const date = document.createElement("p");
-            date.textContent =
-                "Analyzed At: " + message.analyzedAt;
+            const heading = document.createElement("h2");
+            heading.textContent = groupName;
+            heading.style.margin = "25px 0 15px";
 
-            card.append(text, category, risk, date);
+            section.appendChild(heading);
 
-            historyContainer.appendChild(card);
+            groupMessages.forEach(message => {
+                const card = document.createElement("div");
+                card.className =
+                    "history-card " + message.riskLevel.toLowerCase();
+
+                const text = document.createElement("p");
+                text.textContent = "Message: " + message.messageText;
+
+                const category = document.createElement("p");
+                category.textContent =
+                    "Category: " + message.detectionCategory;
+
+                const risk = document.createElement("span");
+                risk.className =
+                    "risk-badge " + message.riskLevel.toLowerCase();
+                risk.textContent = message.riskLevel;
+
+                const date = document.createElement("p");
+                date.textContent =
+                    "Analyzed At: " + message.analyzedAt.replace("T", " ");
+
+                card.append(text, category, risk, date);
+                section.appendChild(card);
+            });
+
+            historyContainer.appendChild(section);
         });
 
     } catch (error) {
-
         historyContainer.textContent =
             "Error loading history: " + error.message;
     }
 }
+
 
 
 // 6. Load history when the webpage opens
