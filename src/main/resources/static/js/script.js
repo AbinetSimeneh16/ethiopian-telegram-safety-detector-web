@@ -160,3 +160,25 @@ async function loadHistory() {
 
 // 6. Load history when the webpage opens
 loadHistory();
+// 7. Handle dashboard navigation
+const navButtons = document.querySelectorAll(".nav-button");
+const pageSections = document.querySelectorAll(".page-section");
+
+navButtons.forEach(button => {
+    button.addEventListener("click", () => {
+
+        // Remove active status from all navigation buttons
+        navButtons.forEach(nav => nav.classList.remove("active"));
+
+        // Activate the clicked navigation button
+        button.classList.add("active");
+
+        // Hide all page sections
+        pageSections.forEach(section => section.classList.remove("active"));
+
+        // Show the selected page section
+        const selectedView = button.dataset.view + "-view";
+        document.getElementById(selectedView).classList.add("active");
+
+    });
+});

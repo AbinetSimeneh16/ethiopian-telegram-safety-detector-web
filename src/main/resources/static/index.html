@@ -1,55 +1,101 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Telegram Safety Detector</title>
-
+    <title>Telegram Safety Dashboard</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
 
-<header>
-    <h1>Telegram Safety Detector</h1>
-    <p>Analyze messages and identify potentially harmful content.</p>
-</header>
+<div class="app-layout">
 
-<main>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <h2>🛡 Telegram Safety</h2>
+            <p>Scam Detection System</p>
+        </div>
 
-    <div class="dashboard-layout">
+        <nav class="sidebar-nav">
+            <button class="nav-button" data-view="dashboard">
+                Dashboard
+            </button>
 
-        <section class="analyzer">
-            <h2>Analyze a Message</h2>
+            <button class="nav-button active" data-view="analyze">
+                Analyze Message
+            </button>
 
-            <textarea id="messageInput" placeholder="Paste your Telegram message here..." rows="6"></textarea>
+            <button class="nav-button" data-view="history">
+                History
+            </button>
 
-            <button id="analyzeButton">Analyze Message</button>
-            <button id="clearButton" type="button">Clear</button>
+            <button class="nav-button" data-view="statistics">
+                Statistics
+            </button>
 
-            <div id="resultContainer"></div>
+            <button class="nav-button" data-view="settings">
+                Settings
+            </button>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Dashboard Section -->
+        <section id="dashboard-view" class="page-section">
+            <h1>Dashboard</h1>
+            <p>Welcome to your Telegram Safety Dashboard.</p>
+            <p>Monitor and manage your message safety analyses.</p>
         </section>
 
-        <section class="history">
-            <h2>Analysis History</h2>
+        <!-- Analyze Section -->
+        <section id="analyze-view" class="page-section active">
+            <h1>Analyze Message</h1>
+            <p>Check a Telegram message for potentially harmful content.</p>
+
+            <div class="analyzer">
+                    <textarea
+                            id="messageInput"
+                            placeholder="Paste your Telegram message here..."
+                            rows="6">
+                    </textarea>
+
+                <button id="analyzeButton">Analyze Message</button>
+                <button id="clearButton" type="button">Clear</button>
+
+                <div id="resultContainer"></div>
+            </div>
+        </section>
+
+        <!-- History Section -->
+        <section id="history-view" class="page-section">
+            <h1>Analysis History</h1>
+            <p>Review your previously analyzed messages.</p>
 
             <div id="historyContainer">
                 <p>Loading analysis history...</p>
             </div>
         </section>
 
-    </div>
+        <!-- Statistics Section -->
+        <section id="statistics-view" class="page-section">
+            <h1>Statistics</h1>
+            <p>View insights and statistics about analyzed messages.</p>
+        </section>
 
-</main>
+        <!-- Settings Section -->
+        <section id="settings-view" class="page-section">
+            <h1>Settings</h1>
+            <p>Manage your application preferences.</p>
+        </section>
 
-<footer>
-    <p>Telegram Safety Detector | Protecting users from online threats.</p>
-</footer>
+    </main>
+
+</div>
 
 <script src="js/script.js"></script>
-
 </body>
 </html>
