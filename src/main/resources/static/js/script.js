@@ -5,12 +5,13 @@ const analyzeButton = document.getElementById("analyzeButton");
 const clearButton = document.getElementById("clearButton");
 const resultContainer = document.getElementById("resultContainer");
 const historyContainer = document.getElementById("historyContainer");
-
+const historySearch = document.getElementById("historySearch");
 
 
 // 2. Listen for clicks on the Analyze button
 analyzeButton.addEventListener("click", analyzeMessage);
 clearButton.addEventListener("click", clearForm);
+historySearch.addEventListener("input", loadHistory);
 
 // 3. Analyze a message using the Spring Boot API
 async function analyzeMessage() {
@@ -121,6 +122,19 @@ async function loadHistory() {
                 "No messages have been analyzed yet.";
             return;
         }
+        // Get the search text and convert it to lowercase
+        const searchTerm = historySearch.value.trim().toLowerCase();
+
+// Keep only messages containing the search text
+        const filteredMessages = messages.filter(message =>
+            message.messageText.toLowerCase().includes(searchTerm)
+        );
+
+// Handle searches with no matching results
+        if (filteredMessages.length === 0) {
+            historyContainer.textContent = "No matching messages found.";
+            return;
+        }
 
         // Get today's and yesterday's dates
         const today = new Date();
@@ -148,12 +162,12 @@ async function loadHistory() {
         };
 
         // Sort messages from newest to oldest
-        messages.sort((a, b) =>
+        filteredMessages.sort((a, b) =>
             new Date(b.analyzedAt) - new Date(a.analyzedAt)
         );
 
         // Place each message into the correct date group
-        messages.forEach(message => {
+        filteredMessages.forEach(message => {
             const messageDate = message.analyzedAt.substring(0, 10);
 
             if (messageDate === todayKey) {
