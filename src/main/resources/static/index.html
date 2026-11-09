@@ -44,12 +44,39 @@
     <!-- Main Content -->
     <main class="main-content">
 
+
         <!-- Dashboard Section -->
         <section id="dashboard-view" class="page-section">
-            <h1>Dashboard</h1>
-            <p>Welcome to your Telegram Safety Dashboard.</p>
+
+            <h1>Dashboard Overview</h1>
             <p>Monitor and manage your message safety analyses.</p>
+
+            <div class="stats-container">
+
+                <div class="stat-card">
+                    <h3>Total Analyzed</h3>
+                    <p id="totalCount">0</p>
+                </div>
+
+                <div class="stat-card safe-stat">
+                    <h3>Safe Messages</h3>
+                    <p id="safeCount">0</p>
+                </div>
+
+                <div class="stat-card suspicious-stat">
+                    <h3>Suspicious Messages</h3>
+                    <p id="suspiciousCount">0</p>
+                </div>
+
+                <div class="stat-card harmful-stat">
+                    <h3>Harmful Messages</h3>
+                    <p id="harmfulCount">0</p>
+                </div>
+
+            </div>
+
         </section>
+
 
         <!-- Analyze Section -->
         <section id="analyze-view" class="page-section active">

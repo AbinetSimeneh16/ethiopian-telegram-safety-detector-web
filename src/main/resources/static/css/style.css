@@ -296,6 +296,56 @@ button {
 }
 
 /* =================================
+   Dashboard Statistics Cards
+================================= */
+
+.stat-card {
+    background-color: #ffffff !important;
+    padding: 25px !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+    margin-bottom: 20px;
+}
+
+.stat-card h3 {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 15px;
+}
+
+.stat-card p {
+    font-size: 32px;
+    font-weight: bold;
+    color: #1e293b;
+}
+
+.safe-stat {
+    border-top: 4px solid #16a34a;
+}
+
+.suspicious-stat {
+    border-top: 4px solid #f59e0b;
+}
+
+.harmful-stat {
+    border-top: 4px solid #dc2626;
+}
+
+/* Responsive statistics cards */
+@media (max-width: 1000px) {
+    .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 500px) {
+    .stats-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =================================
    8. Responsive Design
 ================================= */
 

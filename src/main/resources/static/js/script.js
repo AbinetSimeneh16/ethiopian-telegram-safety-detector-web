@@ -8,6 +8,10 @@ const historyContainer = document.getElementById("historyContainer");
 const historySearch = document.getElementById("historySearch");
 const riskFilter = document.getElementById("riskFilter");
 const categoryFilter = document.getElementById("categoryFilter");
+const totalCount = document.getElementById("totalCount");
+const safeCount = document.getElementById("safeCount");
+const suspiciousCount = document.getElementById("suspiciousCount");
+const harmfulCount = document.getElementById("harmfulCount");
 
 // 2. Listen for clicks on the Analyze button
 analyzeButton.addEventListener("click", analyzeMessage);
@@ -54,6 +58,7 @@ async function analyzeMessage() {
 
         // Refresh the analysis history
         await loadHistory();
+        await updateDashboard();
 
     } catch (error) {
 
@@ -248,9 +253,47 @@ async function loadHistory() {
 }
 
 
+// Update dashboard statistics using saved analysis records
+async function updateDashboard() {
+    try {
+        const response = await fetch("/api/messages");
+
+        if (!response.ok) {
+            throw new Error("Could not retrieve dashboard statistics.");
+        }
+
+        const messages = await response.json();
+
+        // Count messages by risk level
+        const total = messages.length;
+
+        const safe = messages.filter(
+            message => message.riskLevel === "SAFE"
+        ).length;
+
+        const suspicious = messages.filter(
+            message => message.riskLevel === "SUSPICIOUS"
+        ).length;
+
+        const harmful = messages.filter(
+            message => message.riskLevel === "HARMFUL"
+        ).length;
+
+        // Display the calculated statistics
+        totalCount.textContent = total;
+        safeCount.textContent = safe;
+        suspiciousCount.textContent = suspicious;
+        harmfulCount.textContent = harmful;
+
+    } catch (error) {
+        console.error("Dashboard error:", error);
+    }
+}
+
 
 // 6. Load history when the webpage opens
 loadHistory();
+updateDashboard();
 // 7. Handle dashboard navigation
 const navButtons = document.querySelectorAll(".nav-button");
 const pageSections = document.querySelectorAll(".page-section");
