@@ -6,13 +6,15 @@ const clearButton = document.getElementById("clearButton");
 const resultContainer = document.getElementById("resultContainer");
 const historyContainer = document.getElementById("historyContainer");
 const historySearch = document.getElementById("historySearch");
-
+const riskFilter = document.getElementById("riskFilter");
+const categoryFilter = document.getElementById("categoryFilter");
 
 // 2. Listen for clicks on the Analyze button
 analyzeButton.addEventListener("click", analyzeMessage);
 clearButton.addEventListener("click", clearForm);
 historySearch.addEventListener("input", loadHistory);
-
+riskFilter.addEventListener("change", loadHistory);
+categoryFilter.addEventListener("change", loadHistory);
 // 3. Analyze a message using the Spring Boot API
 async function analyzeMessage() {
 
@@ -122,13 +124,30 @@ async function loadHistory() {
                 "No messages have been analyzed yet.";
             return;
         }
-        // Get the search text and convert it to lowercase
+
+// Get the search text
         const searchTerm = historySearch.value.trim().toLowerCase();
 
-// Keep only messages containing the search text
-        const filteredMessages = messages.filter(message =>
-            message.messageText.toLowerCase().includes(searchTerm)
-        );
+// Get the selected filter values
+        const selectedRisk = riskFilter.value;
+        const selectedCategory = categoryFilter.value;
+
+// Filter messages using search text, risk level, and category
+        const filteredMessages = messages.filter(message => {
+
+            const matchesSearch =
+                message.messageText.toLowerCase().includes(searchTerm);
+
+            const matchesRisk =
+                selectedRisk === "ALL" || message.riskLevel === selectedRisk;
+
+            const matchesCategory =
+                selectedCategory === "ALL" ||
+                message.detectionCategory === selectedCategory;
+
+            return matchesSearch && matchesRisk && matchesCategory;
+        });
+
 
 // Handle searches with no matching results
         if (filteredMessages.length === 0) {

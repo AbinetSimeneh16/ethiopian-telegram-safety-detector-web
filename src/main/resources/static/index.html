@@ -75,11 +75,41 @@
             <h1>Analysis History</h1>
             <p>Review your previously analyzed messages.</p>
 
-            <input
-                    type="text"
-                    id="historySearch"
-                    placeholder="Search analyzed messages..."
-            >
+
+            <div class="history-controls">
+
+                <div class="filter-group search-group">
+                    <label for="historySearch">Search Messages</label>
+                    <input
+                            type="text"
+                            id="historySearch"
+                            placeholder="Search analyzed messages..."
+                    >
+                </div>
+
+                <div class="filter-group">
+                    <label for="riskFilter">Risk Level</label>
+                    <select id="riskFilter">
+                        <option value="ALL">All Risk Levels</option>
+                        <option value="SAFE">Safe</option>
+                        <option value="SUSPICIOUS">Suspicious</option>
+                        <option value="HARMFUL">Harmful</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="categoryFilter">Detection Category</label>
+                    <select id="categoryFilter">
+                        <option value="ALL">All Categories</option>
+                        <option value="SCAM">Scam</option>
+                        <option value="HARMFUL">Harmful</option>
+                        <option value="HARASSMENT">Harassment</option>
+                        <option value="NONE">None</option>
+                    </select>
+                </div>
+
+            </div>
+
 
             <div id="historyContainer">
                 <p>Loading analysis history...</p>
