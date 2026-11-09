@@ -12,6 +12,16 @@ const totalCount = document.getElementById("totalCount");
 const safeCount = document.getElementById("safeCount");
 const suspiciousCount = document.getElementById("suspiciousCount");
 const harmfulCount = document.getElementById("harmfulCount");
+// Dashboard category chart elements
+const scamCategoryCount = document.getElementById("scamCategoryCount");
+const harmfulCategoryCount = document.getElementById("harmfulCategoryCount");
+const harassmentCategoryCount = document.getElementById("harassmentCategoryCount");
+const noneCategoryCount = document.getElementById("noneCategoryCount");
+
+const scamCategoryBar = document.getElementById("scamCategoryBar");
+const harmfulCategoryBar = document.getElementById("harmfulCategoryBar");
+const harassmentCategoryBar = document.getElementById("harassmentCategoryBar");
+const noneCategoryBar = document.getElementById("noneCategoryBar");
 
 // 2. Listen for clicks on the Analyze button
 analyzeButton.addEventListener("click", analyzeMessage);
@@ -254,6 +264,7 @@ async function loadHistory() {
 
 
 // Update dashboard statistics using saved analysis records
+// Update dashboard statistics and category chart
 async function updateDashboard() {
     try {
         const response = await fetch("/api/messages");
@@ -264,7 +275,7 @@ async function updateDashboard() {
 
         const messages = await response.json();
 
-        // Count messages by risk level
+        // Risk-level statistics
         const total = messages.length;
 
         const safe = messages.filter(
@@ -279,17 +290,47 @@ async function updateDashboard() {
             message => message.riskLevel === "HARMFUL"
         ).length;
 
-        // Display the calculated statistics
         totalCount.textContent = total;
         safeCount.textContent = safe;
         suspiciousCount.textContent = suspicious;
         harmfulCount.textContent = harmful;
 
+        // Detection category statistics
+        const scam = messages.filter(
+            message => message.detectionCategory === "SCAM"
+        ).length;
+
+        const harmfulCategory = messages.filter(
+            message => message.detectionCategory === "HARMFUL"
+        ).length;
+
+        const harassment = messages.filter(
+            message => message.detectionCategory === "HARASSMENT"
+        ).length;
+
+        const none = messages.filter(
+            message => message.detectionCategory === "NONE"
+        ).length;
+
+        // Display category counts
+        scamCategoryCount.textContent = scam;
+        harmfulCategoryCount.textContent = harmfulCategory;
+        harassmentCategoryCount.textContent = harassment;
+        noneCategoryCount.textContent = none;
+
+        // Calculate bar widths as percentages
+        const getPercentage = count =>
+            total === 0 ? 0 : (count / total) * 100;
+
+        scamCategoryBar.style.width = getPercentage(scam) + "%";
+        harmfulCategoryBar.style.width = getPercentage(harmfulCategory) + "%";
+        harassmentCategoryBar.style.width = getPercentage(harassment) + "%";
+        noneCategoryBar.style.width = getPercentage(none) + "%";
+
     } catch (error) {
         console.error("Dashboard error:", error);
     }
 }
-
 
 // 6. Load history when the webpage opens
 loadHistory();

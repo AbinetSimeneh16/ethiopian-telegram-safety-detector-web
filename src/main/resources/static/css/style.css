@@ -381,3 +381,65 @@ button {
         padding: 20px;
     }
 }
+/* =================================
+   Dashboard Category Distribution
+================================= */
+
+.category-chart {
+    background-color: white;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-top: 30px;
+}
+
+.category-chart h2 {
+    font-size: 20px;
+    color: #1e293b;
+    margin-bottom: 25px;
+}
+
+.category-row {
+    margin-bottom: 22px;
+}
+
+.category-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 9px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.bar-track {
+    width: 100%;
+    height: 12px;
+    background-color: #e2e8f0;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 20px;
+    transition: width 0.5s ease;
+}
+
+.scam-bar {
+    background-color: #f59e0b;
+}
+
+.harmful-bar {
+    background-color: #dc2626;
+}
+
+.harassment-bar {
+    background-color: #8b5cf6;
+}
+
+.none-bar {
+    background-color: #16a34a;
+}
