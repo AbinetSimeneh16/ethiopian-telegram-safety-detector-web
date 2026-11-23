@@ -38,6 +38,11 @@ const statisticsHarmfulBar = document.getElementById("statisticsHarmfulBar");
 const statisticsHarassmentBar = document.getElementById("statisticsHarassmentBar");
 const statisticsNoneBar = document.getElementById("statisticsNoneBar");
 
+// Settings Elements
+const themeSelect = document.getElementById("themeSelect");
+const autoHistoryToggle = document.getElementById("autoHistoryToggle");
+const clearHistoryButton = document.getElementById("clearHistoryButton");
+
 // 2. Listen for clicks on the Analyze button
 analyzeButton.addEventListener("click", analyzeMessage);
 clearButton.addEventListener("click", clearForm);
@@ -428,6 +433,35 @@ async function updateAnalysisTrends() {
         console.error("Error updating analysis trends:", error);
     }
 }
+
+// =================================
+// Theme Settings
+// =================================
+
+// Apply the selected theme
+function applyTheme(theme) {
+    if (theme === "dark") {
+        document.body.classList.add("dark-theme");
+    } else {
+        document.body.classList.remove("dark-theme");
+    }
+
+    themeSelect.value = theme;
+
+    // Save the selected theme
+    localStorage.setItem("selectedTheme", theme);
+}
+
+// Load the saved theme when the application starts
+const savedTheme = localStorage.getItem("selectedTheme") || "light";
+
+applyTheme(savedTheme);
+
+// Change theme when the user selects an option
+themeSelect.addEventListener("change", function () {
+    applyTheme(themeSelect.value);
+});
+
 loadHistory();
 updateDashboard();
 updateAnalysisTrends();
