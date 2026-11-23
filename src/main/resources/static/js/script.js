@@ -12,6 +12,11 @@ const totalCount = document.getElementById("totalCount");
 const safeCount = document.getElementById("safeCount");
 const suspiciousCount = document.getElementById("suspiciousCount");
 const harmfulCount = document.getElementById("harmfulCount");
+// Statistics page elements
+const statisticsTotalCount = document.getElementById("statisticsTotalCount");
+const statisticsSafeCount = document.getElementById("statisticsSafeCount");
+const statisticsSuspiciousCount = document.getElementById("statisticsSuspiciousCount");
+const statisticsHarmfulCount = document.getElementById("statisticsHarmfulCount");
 // Dashboard category chart elements
 const scamCategoryCount = document.getElementById("scamCategoryCount");
 const harmfulCategoryCount = document.getElementById("harmfulCategoryCount");
@@ -22,6 +27,16 @@ const scamCategoryBar = document.getElementById("scamCategoryBar");
 const harmfulCategoryBar = document.getElementById("harmfulCategoryBar");
 const harassmentCategoryBar = document.getElementById("harassmentCategoryBar");
 const noneCategoryBar = document.getElementById("noneCategoryBar");
+// Statistics page category elements
+const statisticsScamCount = document.getElementById("statisticsScamCount");
+const statisticsHarmfulCategoryCount = document.getElementById("statisticsHarmfulCategoryCount");
+const statisticsHarassmentCount = document.getElementById("statisticsHarassmentCount");
+const statisticsNoneCount = document.getElementById("statisticsNoneCount");
+
+const statisticsScamBar = document.getElementById("statisticsScamBar");
+const statisticsHarmfulBar = document.getElementById("statisticsHarmfulBar");
+const statisticsHarassmentBar = document.getElementById("statisticsHarassmentBar");
+const statisticsNoneBar = document.getElementById("statisticsNoneBar");
 
 // 2. Listen for clicks on the Analyze button
 analyzeButton.addEventListener("click", analyzeMessage);
@@ -69,6 +84,7 @@ async function analyzeMessage() {
         // Refresh the analysis history
         await loadHistory();
         await updateDashboard();
+        await updateAnalysisTrends();
 
     } catch (error) {
 
@@ -294,6 +310,11 @@ async function updateDashboard() {
         safeCount.textContent = safe;
         suspiciousCount.textContent = suspicious;
         harmfulCount.textContent = harmful;
+        // Update Statistics page
+        statisticsTotalCount.textContent = total;
+        statisticsSafeCount.textContent = safe;
+        statisticsSuspiciousCount.textContent = suspicious;
+        statisticsHarmfulCount.textContent = harmful;
 
         // Detection category statistics
         const scam = messages.filter(
@@ -317,6 +338,11 @@ async function updateDashboard() {
         harmfulCategoryCount.textContent = harmfulCategory;
         harassmentCategoryCount.textContent = harassment;
         noneCategoryCount.textContent = none;
+        // Update Statistics page category counts
+        statisticsScamCount.textContent = scam;
+        statisticsHarmfulCategoryCount.textContent = harmfulCategory;
+        statisticsHarassmentCount.textContent = harassment;
+        statisticsNoneCount.textContent = none;
 
         // Calculate bar widths as percentages
         const getPercentage = count =>
@@ -326,6 +352,11 @@ async function updateDashboard() {
         harmfulCategoryBar.style.width = getPercentage(harmfulCategory) + "%";
         harassmentCategoryBar.style.width = getPercentage(harassment) + "%";
         noneCategoryBar.style.width = getPercentage(none) + "%";
+        // Update Statistics page category bars
+        statisticsScamBar.style.width = getPercentage(scam) + "%";
+        statisticsHarmfulBar.style.width = getPercentage(harmfulCategory) + "%";
+        statisticsHarassmentBar.style.width = getPercentage(harassment) + "%";
+        statisticsNoneBar.style.width = getPercentage(none) + "%";
 
     } catch (error) {
         console.error("Dashboard error:", error);
@@ -333,8 +364,73 @@ async function updateDashboard() {
 }
 
 // 6. Load history when the webpage opens
+
+// =================================
+// 30-Day Analysis Trends
+// =================================
+
+async function updateAnalysisTrends() {
+    try {
+        const response = await fetch("/api/messages");
+
+        if (!response.ok) {
+            throw new Error("Failed to load analysis trends.");
+        }
+
+        const messages = await response.json();
+
+        const chart = document.getElementById("analysisTrendChart");
+
+        // Clear the chart before generating new bars
+        chart.innerHTML = "";
+
+        // Prepare the last 30 days
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const dailyCounts = [];
+
+        for (let i = 29; i >= 0; i--) {
+            const date = new Date(today);
+            date.setDate(today.getDate() - i);
+
+            const count = messages.filter(message => {
+                const messageDate = new Date(message.analyzedAt);
+                messageDate.setHours(0, 0, 0, 0);
+
+                return messageDate.getTime() === date.getTime();
+            }).length;
+
+            dailyCounts.push({
+                date: date,
+                count: count
+            });
+        }
+
+        // Find the highest daily count
+        const maxCount = Math.max(...dailyCounts.map(day => day.count), 1);
+
+        // Generate chart bars
+        dailyCounts.forEach(day => {
+            const bar = document.createElement("div");
+
+            bar.classList.add("trend-bar");
+
+            const height = (day.count / maxCount) * 100;
+
+            bar.style.height = Math.max(height, 2) + "%";
+            bar.title = `${day.date.toLocaleDateString()}: ${day.count} messages`;
+
+            chart.appendChild(bar);
+        });
+
+    } catch (error) {
+        console.error("Error updating analysis trends:", error);
+    }
+}
 loadHistory();
 updateDashboard();
+updateAnalysisTrends();
 // 7. Handle dashboard navigation
 const navButtons = document.querySelectorAll(".nav-button");
 const pageSections = document.querySelectorAll(".page-section");

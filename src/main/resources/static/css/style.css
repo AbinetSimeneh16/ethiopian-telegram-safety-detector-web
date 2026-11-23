@@ -299,6 +299,13 @@ button {
    Dashboard Statistics Cards
 ================================= */
 
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 30px;
+}
+
 .stat-card {
     background-color: #ffffff !important;
     padding: 25px !important;
@@ -442,4 +449,67 @@ button {
 
 .none-bar {
     background-color: #16a34a;
+}
+/* =================================
+   Statistics Page
+================================= */
+
+#statistics-view .stats-container {
+    margin-top: 30px;
+}
+
+#statistics-view .stat-card {
+    min-height: 130px;
+}
+
+#statistics-view .stat-card h3 {
+    font-size: 14px;
+    color: #64748b;
+}
+
+#statistics-view .stat-card p {
+    font-size: 32px;
+    font-weight: bold;
+}
+/* =================================
+   30-Day Analysis Trends
+================================= */
+
+.trend-chart-container {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-top: 30px;
+}
+
+.trend-chart-container h2 {
+    font-size: 20px;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.trend-chart-container p {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 25px;
+}
+
+.trend-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 220px;
+    padding: 15px 5px 0;
+    border-bottom: 1px solid #cbd5e1;
+    overflow-x: auto;
+}
+
+.trend-bar {
+    flex: 1;
+    min-width: 12px;
+    background-color: #3b82f6;
+    border-radius: 5px 5px 0 0;
+    transition: height 0.3s ease;
 }
