@@ -86,8 +86,12 @@ async function analyzeMessage() {
         // Display the analysis result
         displayResult(result);
 
-        // Refresh the analysis history
-        await loadHistory();
+        // Refresh the analysis history only if automatic updates are enabled
+        if (autoHistoryToggle.checked) {
+            await loadHistory();
+        }
+
+// Always update dashboard and statistics
         await updateDashboard();
         await updateAnalysisTrends();
 
@@ -456,7 +460,20 @@ function applyTheme(theme) {
 const savedTheme = localStorage.getItem("selectedTheme") || "light";
 
 applyTheme(savedTheme);
+// Load saved automatic history preference
+const savedAutoHistory = localStorage.getItem("autoHistoryEnabled");
 
+if (savedAutoHistory !== null) {
+    autoHistoryToggle.checked = savedAutoHistory === "true";
+}
+
+// Save preference whenever checkbox changes
+autoHistoryToggle.addEventListener("change", function () {
+    localStorage.setItem(
+        "autoHistoryEnabled",
+        autoHistoryToggle.checked
+    );
+});
 // Change theme when the user selects an option
 themeSelect.addEventListener("change", function () {
     applyTheme(themeSelect.value);
